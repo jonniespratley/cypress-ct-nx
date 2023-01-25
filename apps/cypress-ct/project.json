@@ -1,0 +1,87 @@
+{
+  "name": "cypress-ct",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/cypress-ct/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/vite:build",
+      
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/cypress-ct"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/cypress-ct/src/environments/environment.ts",
+              "with": "apps/cypress-ct/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/vite:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "cypress-ct:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "cypress-ct:build:development"
+        },
+        "production": {
+          "buildTarget": "cypress-ct:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/cypress-ct/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/cypress-ct"],
+      "options": {
+        "jestConfig": "apps/cypress-ct/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "preview": {
+      "executor": "@nrwl/vite:preview-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "cypress-ct:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "cypress-ct:build:development"
+        },
+        "production": {
+          "buildTarget": "cypress-ct:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
